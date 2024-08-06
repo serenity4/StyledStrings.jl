@@ -132,7 +132,7 @@ struct Face
                      Tuple{<:Union{Nothing, SimpleColor}, Symbol}}
     strikethrough::Union{Nothing, Bool}
     inverse::Union{Nothing, Bool}
-    inherit::Vector{Symbol}
+    inherit::Union{Nothing, Vector{Symbol}}
 end
 
 function Face(; font::Union{Nothing, String} = nothing,
@@ -147,7 +147,7 @@ function Face(; font::Union{Nothing, String} = nothing,
                                } = nothing,
               strikethrough::Union{Nothing, Bool} = nothing,
               inverse::Union{Nothing, Bool} = nothing,
-              inherit::Union{Symbol, Vector{Symbol}} = Symbol[],
+              inherit::Union{Nothing, Symbol, Vector{Symbol}} = nothing,
               _...) # Simply ignore unrecognised keyword arguments.
     ascolor(::Nothing) = nothing
     ascolor(c::AbstractString) = parse(SimpleColor, c)
@@ -177,7 +177,7 @@ Base.:(==)(a::Face, b::Face) =
 Base.copy(f::Face) =
     Face(f.font, f.height, f.weight, f.slant,
          f.foreground, f.background, f.underline,
-         f.strikethrough, f.inverse, copy(f.inherit))
+         f.strikethrough, f.inverse, isnothing(f.inherit) ? f.inherit : copy(f.inherit))
 
 function Base.show(io::IO, ::MIME"text/plain", color::SimpleColor)
     skiptype = get(io, :typeinfo, nothing) === SimpleColor
@@ -232,7 +232,7 @@ function Base.show(io::IO, ::MIME"text/plain", face::Face)
                     show(io, getfield(face, field))
                 end
             end
-            if !isempty(face.inherit)
+            if !isnothing(face.inherit) && !isempty(face.inherit)
                 if isfirst; isfirst = false else print(io, ", ") end
                 print(io, "inherit=")
                 show(IOContext(io, :typeinfo => Vector{Symbol}), face.inherit)
@@ -278,7 +278,7 @@ function Base.show(io::IO, ::MIME"text/plain", face::Face)
                       getfield(face, field))
             end
         end
-        if !isempty(face.inherit)
+        if !isnothing(face.inherit) && !isempty(face.inherit)
             print(io, '\n', lpad("inherit", fieldnamepad, ' '), ": ")
             isfirst = true
             for iface in face.inherit
@@ -309,7 +309,7 @@ const FACES = let default = Dict{Symbol, Face}(
         SimpleColor(:default), # foreground
         SimpleColor(:default), # background
         false, false, false,   # underline, strikethrough, overline
-        Symbol[]),              # inherit
+        nothing),              # inherit
     # Property faces
     :bold => Face(weight=:bold),
     :light => Face(weight=:light),
@@ -494,7 +494,7 @@ Merge the properties of the `initial` face and `others`, with
 later faces taking priority.
 """
 function Base.merge(a::Face, b::Face)
-    if isempty(b.inherit)
+    if isnothing(b.inherit) || isempty(b.inherit)
         # Extract the heights to help type inference a bit to be able
         # to narrow the types in e.g. `aheight * bheight`
         aheight = a.height
@@ -516,7 +516,7 @@ function Base.merge(a::Face, b::Face)
     else
         b_noinherit = Face(
             b.font, b.height, b.weight, b.slant, b.foreground, b.background,
-            b.underline, b.strikethrough, b.inverse, Symbol[])
+            b.underline, b.strikethrough, b.inverse, nothing)
         b_inheritance = map(fname -> get(FACES.current[], fname, Face()), Iterators.reverse(b.inherit))
         b_resolved = merge(foldl(merge, b_inheritance), b_noinherit)
         merge(a, b_resolved)
@@ -541,7 +541,7 @@ Obtain the final merged face from `faces`, an iterator of
 function getface(faces)
     isempty(faces) && return FACES.current[][:default]
     combined = mapfoldl(_mergedface, merge, faces)::Face
-    if !isempty(combined.inherit)
+    if !isnothing(combined.inherit) && !isempty(combined.inherit)
         combined = merge(Face(), combined)
     end
     merge(FACES.current[][:default], combined)
@@ -701,12 +701,12 @@ function Base.convert(::Type{Face}, spec::Dict)
          if haskey(spec, "inverse") && spec["inverse"] isa Bool
              spec["inverse"] end,
          if !haskey(spec, "inherit")
-             Symbol[]
+             nothing
          elseif spec["inherit"] isa String
              [Symbol(spec["inherit"])]
          elseif spec["inherit"] isa Vector{String}
              Symbol.(spec["inherit"])
          else
-             Symbol[]
+             nothing
          end)
 end

@@ -106,61 +106,61 @@ end
     # Construction
     @test Face() ==
         Face(nothing, nothing, nothing, nothing, nothing,
-             nothing, nothing, nothing, nothing, Symbol[])
+             nothing, nothing, nothing, nothing, nothing)
     @test Face(font="font") ==
         Face("font", nothing, nothing, nothing, nothing,
-             nothing, nothing, nothing, nothing, Symbol[])
+             nothing, nothing, nothing, nothing, nothing)
     @test Face(height=1) ==
         Face(nothing, 1, nothing, nothing, nothing,
-             nothing, nothing, nothing, nothing, Symbol[])
+             nothing, nothing, nothing, nothing, nothing)
     @test Face(weight=:bold) ==
         Face(nothing, nothing, :bold, nothing, nothing,
-             nothing, nothing, nothing, nothing, Symbol[])
+             nothing, nothing, nothing, nothing, nothing)
     @test Face(slant=:italic) ==
         Face(nothing, nothing, nothing, :italic, nothing,
-             nothing, nothing, nothing, nothing, Symbol[])
+             nothing, nothing, nothing, nothing, nothing)
     @test Face(foreground=SimpleColor(:red)) ==
         Face(nothing, nothing, nothing, nothing, SimpleColor(:red),
-             nothing, nothing, nothing, nothing, Symbol[])
+             nothing, nothing, nothing, nothing, nothing)
     @test Face(foreground=:red) ==
         Face(nothing, nothing, nothing, nothing, SimpleColor(:red),
-             nothing, nothing, nothing, nothing, Symbol[])
+             nothing, nothing, nothing, nothing, nothing)
     @test Face(foreground=0xff0000) ==
         Face(nothing, nothing, nothing, nothing, SimpleColor(0xff0000),
-             nothing, nothing, nothing, nothing, Symbol[])
+             nothing, nothing, nothing, nothing, nothing)
     @test Face(foreground="red") ==
         Face(nothing, nothing, nothing, nothing, SimpleColor(:red),
-             nothing, nothing, nothing, nothing, Symbol[])
+             nothing, nothing, nothing, nothing, nothing)
     @test Face(foreground="#ff0000") ==
         Face(nothing, nothing, nothing, nothing, SimpleColor(0xff0000),
-             nothing, nothing, nothing, nothing, Symbol[])
+             nothing, nothing, nothing, nothing, nothing)
     @test Face(background=SimpleColor(:red)) ==
         Face(nothing, nothing, nothing, nothing, nothing,
-             SimpleColor(:red), nothing, nothing, nothing, Symbol[])
+             SimpleColor(:red), nothing, nothing, nothing, nothing)
     @test Face(background=:red) ==
         Face(nothing, nothing, nothing, nothing, nothing,
-             SimpleColor(:red), nothing, nothing, nothing, Symbol[])
+             SimpleColor(:red), nothing, nothing, nothing, nothing)
     @test Face(background=0xff0000) ==
         Face(nothing, nothing, nothing, nothing, nothing,
-             SimpleColor(0xff0000), nothing, nothing, nothing, Symbol[])
+             SimpleColor(0xff0000), nothing, nothing, nothing, nothing)
     @test Face(underline=true) ==
         Face(nothing, nothing, nothing, nothing, nothing,
-             nothing, true, nothing, nothing, Symbol[])
+             nothing, true, nothing, nothing, nothing)
     @test Face(underline=:red) ==
         Face(nothing, nothing, nothing, nothing, nothing,
-             nothing, SimpleColor(:red), nothing, nothing, Symbol[])
+             nothing, SimpleColor(:red), nothing, nothing, nothing)
     @test Face(underline=(nothing, :curly)) ==
         Face(nothing, nothing, nothing, nothing, nothing,
-             nothing, (nothing, :curly), nothing, nothing, Symbol[])
+             nothing, (nothing, :curly), nothing, nothing, nothing)
     @test Face(underline=(:red, :curly)) ==
         Face(nothing, nothing, nothing, nothing, nothing,
-             nothing, (SimpleColor(:red), :curly), nothing, nothing, Symbol[])
+             nothing, (SimpleColor(:red), :curly), nothing, nothing, nothing)
     @test Face(strikethrough=true) ==
         Face(nothing, nothing, nothing, nothing, nothing,
-             nothing, nothing, true, nothing, Symbol[])
+             nothing, nothing, true, nothing, nothing)
     @test Face(inverse=true) ==
         Face(nothing, nothing, nothing, nothing, nothing,
-             nothing, nothing, nothing, true, Symbol[])
+             nothing, nothing, nothing, true, nothing)
     @test Face(inherit=:singleface) ==
         Face(nothing, nothing, nothing, nothing, nothing,
              nothing, nothing, nothing, nothing, [:singleface])
