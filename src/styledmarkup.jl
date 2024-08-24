@@ -988,6 +988,8 @@ macro styled_str(raw_content::String)
     run_state_machine!(state)
     if !isempty(state.errors)
         throw(MalformedStylingMacro(state.content, state.errors))
+    elseif state.interpolated && length(state.parts) == 1
+        :(annotatedstring($(first(state.parts))))
     elseif state.interpolated
         :(annotatedstring($(state.parts...)) |> annotatedstring_optimize!)
     else
